@@ -64,7 +64,7 @@ class Game {
         this.playersList.map((player) => {
             if (player.status == "playing") {
                 count += 1;
-                winner = player
+                winner = player;
             }
         });
         if (count == 1) {
@@ -73,8 +73,9 @@ class Game {
             this.button('New Game', 'game.newGame');
         } else {
             this.button('Next turn', 'game.newTurn');
-
+            this.buttonOption('reset', 'game.newGame');
         }
+
     }
 
     message = (content) => {
@@ -82,7 +83,11 @@ class Game {
     }
 
     button = (content, functionGame) => {
-        document.getElementById("next").innerHTML = `<button onclick="${functionGame}()">${content}</button>`;
+        document.getElementById("funct").innerHTML = `<button onclick="${functionGame}()">${content}</button>`;
+    }
+
+    buttonOption = (content, functionGame) => {
+        document.getElementById("option").innerHTML = `<button onclick="${functionGame}()">${content}</button>`;
     }
 
     newGame = () => {
