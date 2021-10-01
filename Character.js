@@ -1,8 +1,9 @@
 class Character {
-    constructor(hp, dmg, mana) {
+    constructor(hp, dmg, mana, playable) {
         this.hp = hp;
         this.dmg = dmg;
         this.mana = mana;
+        this.playable = false;
     }
     dealDamage = (victim) => {
         victim.takeDamage(this.dmg);

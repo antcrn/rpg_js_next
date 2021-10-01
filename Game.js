@@ -5,6 +5,50 @@ class Game {
         this.playersLeft = 0;
     }
 
+    playable = () => {
+        const playableName = prompt("Please enter your name or cancel for auto mode");
+        if (playableName != null) {
+            const playableRace = prompt("Hello " + playableName + " !  Choose your race : Fullstack, Wizard, Fighter, Assassin, Berzerker, Paladin, Monk");
+            if (playableRace != null) {
+                this.chooseRace(playableName, playableRace);
+            }
+        }
+    }
+
+    chooseRace(playableName, playableRace) {
+        let p8 = "";
+        switch (playableRace) {
+            case "Fullstack":
+                p8 = new Fullstack(playableName);
+                break;
+            case "Wizard":
+                p8 = new Wizard(playableName);
+                break;
+            case "Fighter":
+                p8 = new Fighter(playableName);
+                break;
+            case "Assassin":
+                p8 = new Assassin(playableName);
+                break;
+            case "Berzerker":
+                p8 = new Berzerker(playableName);
+                break;
+            case "Paladin":
+                p8 = new Paladin(playableName);
+                break;
+            case "Monk":
+                p8 = new Monk(playableName);
+                break;
+            default:
+                this.playable();
+                break;
+
+        }
+        p8.playable = true;
+        this.addPlayer(p8);
+
+    }
+
     addPlayer(player) {
         this.playersList.push(player);
         this.message(`<span>${player.name} entre dans l'arène</span>`);
@@ -37,10 +81,19 @@ class Game {
 
     randomPlayer = (player) => {
         let randomPickPlayer = this.playersList[Math.floor(Math.random() * this.playersList.length)];
-        if (randomPickPlayer.status == "playing" && randomPickPlayer.name != player.name) {
+        if (randomPickPlayer.status == "playing" && randomPickPlayer.name != player.name && player.playable == false) {
             player.dealDamage(randomPickPlayer);
-        } else if (this.playersLeft != 6) {
+        } else if (this.playersLeft != 7 && player.playable == false) {
             this.randomPlayer(player);
+        } else if (player.playable === true) {
+            let listName = '';
+            for (const el of this.playersList) {
+                if (!el.playable && el.status == "playing")
+                    listName += `${el.name}, `;
+            }
+            let playableVictim = prompt(`Please enter the name of ennemi :${listName}`);
+            let victimHumanName = this.playersList.findIndex(x => x.name == playableVictim);
+            player.dealDamage(this.playersList[victimHumanName]);
         } else {
             this.playersList.map((player) => {
                 if (player.status == "playing") {
@@ -64,12 +117,15 @@ class Game {
         this.playersList.map((player) => {
             if (player.status == "playing") {
                 count += 1;
+                player.status == "winner";
                 winner = player;
             }
         });
         if (count == 1) {
-            this.message(`<h1>FIN</h1>`);
-            this.message(`${winner.name} a gagné :)`);
+            this.message(`${winner.name} a gagné, Bravo  :) \n`);
+            this.message(`${this.watchStats('playing')}`);
+            console.table(this.playersList);
+            this.message(`<h2>FIN</h2>`);
             this.button('New Game', 'game.newGame');
         } else {
             this.button('Next turn', 'game.newTurn');
@@ -89,7 +145,6 @@ class Game {
     buttonOption = (content, functionGame) => {
         document.getElementById("option").innerHTML = `<button onclick="${functionGame}()">${content}</button>`;
     }
-
     newGame = () => {
         location.reload();
     }
@@ -103,8 +158,10 @@ const p4 = new Berzerker("Draven");
 const p5 = new Assassin("Carl");
 const p6 = new Wizard("Gibus");
 const p7 = new Fullstack("Tim");
-
+//const p8 = new Wizard("Zinzin");
+//p8.playable = true;
 const game = new Game();
+game.playable();
 
 game.addPlayer(p1);
 game.addPlayer(p2);
@@ -113,4 +170,5 @@ game.addPlayer(p4);
 game.addPlayer(p5);
 game.addPlayer(p6);
 game.addPlayer(p7);
+//game.addPlayer(p8);
 game.newTurn();

@@ -1,5 +1,5 @@
 class Fullstack extends Character {
-    constructor(name, status = "playing", hp = 8, dmg = 2, mana = 100) {
+    constructor(name, status = "playing", hp = 10, dmg = 4, mana = 100) {
         super(hp, dmg, mana);
         this.name = name;
         this.status = status;
